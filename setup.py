@@ -12,7 +12,6 @@
 
 import sys
 from setuptools import setup, find_packages
-from setuptools.command import build_py
 from distutils.util import convert_path
 
 
@@ -22,29 +21,7 @@ with open(convert_path('redash_reql/version.py')) as fd:
     exec(fd.read(), version_globals)
 
 
-# TODO: This doesn't work -- use prebuild.sh
-class BuildPyCommand(build_py.build_py):
-  """ Custom build command """
-
-  def run(self):
-    with open('sql.g', 'r') as fd_grammar:
-        with open('redash_reql/_parser.py', 'w') as fd_parser:
-            orig_stdout = sys.stdout
-            sys.stdout = fd_parser
-            try:
-                from lark.tools.standalone import main
-                main(fd_grammar.read(), 'start')
-            finally:
-                sys.stdout = orig_stdout
-
-    build_py.build_py.run(self)
-
-
 setup(
-    cmdclass={
-        'build_py': BuildPyCommand,
-    },
-
     name='redash_reql',
     version=version_globals['__version__'],
     author='Iván Montes Velencoso',
@@ -68,15 +45,18 @@ setup(
 
     packages=find_packages(exclude=['tests']),
 
-    install_requires=[],
+    install_requires=[
+        "lark-parser==0.6.4",
+    ],
     extras_require={
         "dev": [
             "pytest",
             "pytest-runner",
-            "lark-parser==0.6.4",
         ]
     },
 
-    package_data={},
+    package_data={
+        'redash_reql': 'sql.g'
+    },
     data_files=[]
 )
