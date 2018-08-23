@@ -33,7 +33,7 @@ setup(
     long_description_content_type="text/markdown",
     classifiers=(
         "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 2.7",
     ),
     keywords='redash sqlite',
