@@ -2,7 +2,7 @@ import sys
 from lark import Lark, Visitor, Tree
 
 
-SQL_GRAMMAR = '''
+SQL_GRAMMAR = r'''
     // SQL syntax for SELECTs (based on sqlite3)
     // https://www.sqlite.org/lang_select.html
     //
@@ -243,10 +243,6 @@ SQL_GRAMMAR = '''
 class ReqlParser(object):
 
     def __init__(self, transformer=None, postlex=None):
-        # Override the utility classes based on the parsing module
-        self.Visitor = Visitor
-        self.Tree = Tree
-
         self.lark = Lark(SQL_GRAMMAR, transformer=transformer, postlex=postlex)
 
     def parse(self, code, transformer=None):

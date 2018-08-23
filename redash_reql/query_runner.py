@@ -16,13 +16,13 @@ from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATETIME, TYPE_FLOAT,
                                  register)
 from redash.utils import JSONEncoder
 
-from .reql_runner import ReqlParser
+from redash_reql.parser import ReqlParser, Visitor, Tree
 
 
 logger = logging.getLogger(__name__)
 
 
-class ReqlVisitor(ReqlParser.Visitor):
+class ReqlVisitor(Visitor):
     """ Search among the table refrences in the query to find those
         that match the `query_\d+` pattern.
     """
@@ -38,7 +38,7 @@ class ReqlVisitor(ReqlParser.Visitor):
             return
 
         first = node.children[0]
-        if not isinstance(first, ReqlParser.Tree) or first.data != 'ident':
+        if not isinstance(first, Tree) or first.data != 'ident':
             return
 
         t_name = first.children[0]
@@ -52,7 +52,7 @@ class ReqlVisitor(ReqlParser.Visitor):
         if m:
             query_id = int(m.group(1))
             self.queries.append(
-                QueryResultsVisitor.QueryRef(
+                ReqlVisitor.QueryRef(
                     value,
                     int(m.group(1)),
                     m.group(2) is not None,
