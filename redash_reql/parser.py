@@ -1,5 +1,5 @@
 import sys
-from lark import Lark, Visitor, Tree, Token
+from lark import Lark, Visitor, Tree
 
 
 SQL_GRAMMAR = '''
@@ -246,7 +246,6 @@ class ReqlParser(object):
         # Override the utility classes based on the parsing module
         self.Visitor = Visitor
         self.Tree = Tree
-        self.Token = Token
 
         self.lark = Lark(SQL_GRAMMAR, transformer=transformer, postlex=postlex)
 
