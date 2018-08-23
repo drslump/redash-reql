@@ -33,7 +33,6 @@ class ReqlVisitor(Visitor):
         self.queries = []
 
     def table_ref(self, node):
-        logger.warn('table_ref: %s', node)
         if not node.children:
             return
 
@@ -85,10 +84,12 @@ def _guess_type(value):
 
     return TYPE_STRING
 
+# Create a shared instance of the parser, since it's expensive to generate
+# it from the grammar at runtime. It should be thread safe though.
+reql_parser = ReqlParser()
 
 def extract_queries(query):
-    parser = ReqlParser()
-    ast = parser.parse(query)
+    ast = reql_parser.parse(query)
 
     visitor = ReqlVisitor()
     visitor.visit(ast)
