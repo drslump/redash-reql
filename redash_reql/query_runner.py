@@ -7,6 +7,8 @@ import sqlite3
 from collections import namedtuple
 from dateutil import parser
 
+from sqlalchemy.orm.exc import NoResultFound
+
 from redash import models
 from redash.permissions import has_access, not_view_only
 from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATETIME, TYPE_FLOAT,
@@ -14,13 +16,13 @@ from redash.query_runner import (TYPE_BOOLEAN, TYPE_DATETIME, TYPE_FLOAT,
                                  register)
 from redash.utils import JSONEncoder
 
-from redash.utils.reql import ReqlParser
+from .reql_runner import ReqlParser
 
 
 logger = logging.getLogger(__name__)
 
 
-class QueryResultsVisitor(ReqlParser.Visitor):
+class ReqlVisitor(ReqlParser.Visitor):
     """ Search among the table refrences in the query to find those
         that match the `query_\d+` pattern.
     """
@@ -88,14 +90,18 @@ def extract_queries(query):
     parser = ReqlParser()
     ast = parser.parse(query)
 
-    visitor = QueryResultsVisitor()
+    visitor = ReqlVisitor()
     visitor.visit(ast)
 
     return visitor.queries
 
 
 def _load_query(user, q):
-    query = models.Query.maybe_by_id(q.id)
+    try:
+        query = models.Query.get_by_id(q.id)
+    except NoResultFound:
+        query = None
+
     location = '(at line {} column {})'.format(q.line, q.column)
 
     if not query or user.org_id != query.org_id:
@@ -168,7 +174,7 @@ def create_table(conn, table, results):
     logger.info('Inserted %d rows into %s', len(results['rows']), table)
 
 
-class Results(BaseQueryRunner):
+class ReqlQueryRunner(BaseQueryRunner):
     noop_query = 'SELECT 1'
 
     @classmethod

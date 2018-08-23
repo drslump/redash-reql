@@ -33,7 +33,6 @@ class BuildPyCommand(build_py.build_py):
             sys.stdout = fd_parser
             try:
                 from lark.tools.standalone import main
-                raise RuntimeError('@@@')
                 main(fd_grammar.read(), 'start')
             finally:
                 sys.stdout = orig_stdout

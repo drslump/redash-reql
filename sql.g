@@ -28,7 +28,7 @@ compound_expr           : expr ("," expr)*
                         | expr_binary
                         | expr_binary NOT? MATCH expr_binary [ ESCAPE expr_binary ] -> expr_search
 
-// TODO: shall we unwrap according to operator priority
+// TODO: shall we unwrap according to operator priority?
 ?expr_binary            : expr_unary (op_binary expr_unary)*
 
 ?expr_unary             : op_unary+ expr_func
