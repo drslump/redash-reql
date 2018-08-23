@@ -243,7 +243,9 @@ SQL_GRAMMAR = r'''
 class ReqlParser(object):
 
     def __init__(self, transformer=None, postlex=None):
-        self.lark = Lark(SQL_GRAMMAR, transformer=transformer, postlex=postlex)
+        self.lark = Lark(
+            SQL_GRAMMAR, start='start', parser='lalr',
+            transformer=transformer, postlex=postlex)
 
     def parse(self, code, transformer=None):
         tree = self.lark.parse(code)
