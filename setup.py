@@ -55,6 +55,6 @@ setup(
         ]
     },
 
-    package_data={}
+    package_data={},
     data_files=[]
 )
