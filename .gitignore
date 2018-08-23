@@ -1,0 +1,2 @@
+*.egg-info/
+redash_reql/_parser.py
