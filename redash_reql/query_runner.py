@@ -195,7 +195,7 @@ class ReqlQueryRunner(BaseQueryRunner):
 
     @classmethod
     def name(cls):
-        return "Query Results (Beta)"
+        return "ReQL Results"
 
     def _create_db(self):
         conn = sqlite3.connect(':memory:', isolation_level=None)
@@ -261,4 +261,4 @@ class ReqlQueryRunner(BaseQueryRunner):
         return json_data, error
 
 
-register(Results)
+register(ReqlQueryRunner)

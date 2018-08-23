@@ -55,8 +55,6 @@ setup(
         ]
     },
 
-    package_data={
-        'redash_reql': 'sql.g'
-    },
+    package_data={}
     data_files=[]
 )
