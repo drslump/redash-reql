@@ -146,7 +146,9 @@ def create_tables_from_queries(user, conn, queries):
 
         results = json.loads(results)
 
-        create_table(conn, q.name, results)
+        # Do not generate an additional table to store data
+        # in case we obtained the latest data from the source
+        create_table(conn, re.sub('_refresh$', '', q.name), results)
         done.add(q.name)
 
 
